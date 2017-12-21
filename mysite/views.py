@@ -1,26 +1,24 @@
-from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
+from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
+from .forms import AddPicForm
+from Instagram import models
+from PIL import Image
 
 
-def model_form_upload(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+def display_pic(request):
+    pictures = [
+        picture.photo.url.replace('Instagram/static', '')
+        for picture in models.Document.objects.all()
+    ]
+    return render(request, 'Instagram/feed.html', {'pictures': pictures})
+
+
+def add_pic(request):
+    form = AddPicForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        return redirect('Instagram:feed')
     else:
-        form = DocumentForm()
-    return render(request, 'core/model_form_upload.html', {'form': form})
-
-
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        return render(request, 'core/simple_upload.html',
-                      {'uploaded_file_url': uploaded_file_url})
-    return render(request, 'core/simple_upload.html')
+        return render(request, 'Instagram/add.html', {'form': form})

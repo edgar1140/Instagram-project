@@ -8,6 +8,31 @@ from app.forms import Filters
 from PIL import Image
 
 
+def make_obj(picture):
+    comments = []
+    comment_set = picture.comment_set.all()
+    for c in comment_set:
+        comments.append(c.comment)
+    return {
+        'url': picture.photo.url.replace('Instagram/static', ''),
+        'description': picture.description,
+        'id': picture.id,
+        'comments': comments
+    }
+
+
+class PicView(View):
+    def get(self, request):
+        picture_objects = models.Document.objects.all()
+        pictures = []
+        for picture in picture_objects:
+            pictures.append(make_obj(picture))
+
+        return render(request, 'Instagram/feed.html',
+                      {'pictures': pictures,
+                       'post_comment': CommentForm()})
+
+
 class PicFilter(View):
     def get(self, request, image_id):
         form = Filters()
@@ -39,13 +64,12 @@ def add_pic(request):
         return render(request, 'Instagram/upload.html', {'form': form})
 
 
-class AddComment(forms.Form):
-    comment = forms.CharField()
-
-    def __init__(self, document=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.document = document
-
-    def saveComment(self):
-        return self.document.comment_set.create(
-            comment=self.cleaned_data['comment'])
+class InsertComment(View):
+    def post(self, request, image_id):
+        pic = models.Document.objects.get(id=image_id)
+        form = CommentForm(pic, request.POST)
+        if form.is_valid():
+            form.saveComment()
+            return redirect('Instagram:feed')
+        else:
+            return redirect('Instagram:feed')

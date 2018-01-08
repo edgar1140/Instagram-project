@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import HttpResponse
 from django.views import View
-from .forms import AddPicForm
+from .forms import AddPicForm, AddComment
 from app.models import Document
 from app.forms import Filters
 from PIL import Image
@@ -23,7 +23,7 @@ def make_obj(picture):
 
 class PicView(View):
     def get(self, request):
-        picture_objects = models.Document.objects.all()
+        picture_objects = Document.objects.all()
         pictures = []
         for picture in picture_objects:
             pictures.append(make_obj(picture))
@@ -66,8 +66,8 @@ def add_pic(request):
 
 class InsertComment(View):
     def post(self, request, image_id):
-        pic = models.Document.objects.get(id=image_id)
-        form = CommentForm(pic, request.POST)
+        pic = Document.objects.get(id=image_id)
+        form = AddComment(pic, request.POST)
         if form.is_valid():
             form.saveComment()
             return redirect('Instagram:feed')

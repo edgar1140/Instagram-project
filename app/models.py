@@ -9,7 +9,7 @@ class Document(models.Model):
         return self.photo.url[len('app/static/'):]
 
 
-class Comment(models.Model):
-    comment = models.CharField(max_length=220)
-    document = models.ForeignKey(
-        Document, on_delete=models.SET_NULL, blank=True, null=True)
+# class Comment(models.Model):
+#     comment = models.CharField(max_length=220)
+#     document = models.ForeignKey(
+#         Document, on_delete=models.SET_NULL, blank=True, null=True)

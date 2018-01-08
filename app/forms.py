@@ -2,8 +2,6 @@ from django import forms
 from .models import Document
 from PIL import ImageFilter
 
-# from PIL import Image
-
 
 class AddPicForm(forms.ModelForm):
     class Meta:

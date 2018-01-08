@@ -15,7 +15,18 @@
                 </button>
             </form>
         </div>
-        {% endfor %} {% else %}
+        {% if picture.comments %}
+        <h3>
+            <p>{{ picture.choosing }}</p>
+            Comments:
+        </h3>
+        {% for c in picture.comments %}
+        <p>
+            <div class="comment">
+                {{ c }}
+            </div>
+        </p>
+        {% endfor %} {% endif %} {% endfor %} {% else %}
         <p>No pictures :'(</p>
         {% endif %}
     </div>

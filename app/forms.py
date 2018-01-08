@@ -34,3 +34,15 @@ class Filters(forms.Form):
             'SMOOTH_MORE': ImageFilter.SMOOTH_MORE,
             'SHARPEN': ImageFilter.SHARPEN
         }.get(self.cleaned_data['f'], None)
+
+
+class AddComment(forms.Form):
+    comment = forms.CharField()
+
+    def __init__(self, document=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.document = document
+
+    def saveComment(self):
+        return self.document.comment_set.create(
+            comment=self.cleaned_data['comment'])

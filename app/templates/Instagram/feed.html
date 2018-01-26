@@ -1,12 +1,12 @@
 {% extends 'Instagram/base.html' %} {% block content %} {%load static%}
 <div class="container">
     <div class="jumbotron">
-        <h1>PintaGram</h1>
+        <h1>Pintagram</h1>
         <p>A great place in the picture world.</p>
     </div>
     <div class="row">
         {% if pictures %} {% for picture in pictures %}
-        <div class="col-lg-4 col-md-6 col-sm-6 col-sm-offset-2 col-ls-offset-0 col-md-offset-0 img-div">
+        <div class="col-lg-4 col-md-6 img-div">
             <img src="{% static picture.image_url %}?t={% now 'u' %}" />
             <form action="{% url 'Instagram:filter' picture.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -14,21 +14,29 @@
                     Filter
                 </button>
             </form>
+
+            {% if picture.comment_set.all %}
+            <h3>
+
+                Comments:
+            </h3>
+            {% for c in picture.comment_set.all %}
+            <p>
+                <div class="comment">
+                    {{ c.comment }}
+                </div>
+            </p>
+            {% endfor %} {% endif %}
+            <form action="{% url 'Instagram:comment' picture.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %} {{ post_comment }}
+                <button class="btn" type="submit">Comment</button>
+            </form>
+            <a href="{% url 'Instagram:ball' picture.id %}">
+                <button class="btn">SOCCER THEME</button>
+            </a>
         </div>
-        {% if picture.comments %}
-        <h3>
-            <p>{{ picture.choosing }}</p>
-            Comments:
-        </h3>
-        {% for c in picture.comments %}
-        <p>
-            <div class="comment">
-                {{ c }}
-            </div>
-        </p>
-        {% endfor %} {% endif %} {% endfor %} {% else %}
+        {% endfor %} {% else %}
         <p>No pictures :'(</p>
-        {% endif %}
+        {% endif %} {% endblock %}
     </div>
 </div>
-{% endblock %}

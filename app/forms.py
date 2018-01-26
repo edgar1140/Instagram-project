@@ -1,5 +1,5 @@
 from django import forms
-from .models import Document
+from .models import Document, Comment
 from PIL import ImageFilter
 
 

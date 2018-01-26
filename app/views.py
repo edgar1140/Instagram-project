@@ -5,7 +5,8 @@ from django.views import View
 from .forms import AddPicForm, AddComment
 from app.models import Document
 from app.forms import Filters
-from PIL import Image
+from PIL import Image, ImageFilter
+from app import imagefilters
 
 
 def make_obj(picture):
@@ -24,13 +25,10 @@ def make_obj(picture):
 class PicView(View):
     def get(self, request):
         picture_objects = Document.objects.all()
-        pictures = []
-        for picture in picture_objects:
-            pictures.append(make_obj(picture))
-
-        return render(request, 'Instagram/feed.html',
-                      {'pictures': pictures,
-                       'post_comment': CommentForm()})
+        return render(request, 'Instagram/feed.html', {
+            'pictures': picture_objects,
+            'post_comment': AddComment()
+        })
 
 
 class PicFilter(View):
@@ -52,7 +50,9 @@ class PicFilter(View):
 
 def display_pic(request):
     pictures = Document.objects.all()
-    return render(request, 'Instagram/feed.html', {'pictures': pictures})
+    return render(request, 'Instagram/feed.html',
+                  {'pictures': pictures,
+                   'post_comment': AddComment()})
 
 
 def add_pic(request):
@@ -73,3 +73,10 @@ class InsertComment(View):
             return redirect('Instagram:feed')
         else:
             return redirect('Instagram:feed')
+
+
+def soccer_filter(request, image_id):
+    path = Document.objects.get(id=image_id).photo.path
+    imagefilters.soccer_filter(path)
+    Document.objects.get(id=image_id).save()
+    return redirect('Instagram:feed')

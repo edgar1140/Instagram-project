@@ -1,0 +1,35 @@
+.container {
+    background-color: rgba(248, 33, 18, 0.898);
+    overflow: hidden;
+}
+
+.img-div {
+    text-align: center;
+    padding: 10px;
+    width: 50%;
+    height: 95%;
+}
+
+img {
+    max-width: 400px;
+    max-height: 400px;
+    width: 100%;
+    height: 120%;
+    margin-bottom: 25px;
+}
+
+.jumbotron {
+    color: rgb(255, 255, 255);
+    background-color: rgba(18, 248, 210, 0.898);
+}
+
+.btn {
+    color: white;
+    background-color: rgb(235, 231, 12);
+    padding: 12px;
+    margin: 8px;
+}
+
+.comment {
+    font-size: 1.3em;
+}

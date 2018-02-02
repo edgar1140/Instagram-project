@@ -80,3 +80,16 @@ def soccer_filter(request, image_id):
     imagefilters.soccer_filter(path)
     Document.objects.get(id=image_id).save()
     return redirect('Instagram:feed')
+
+
+class AddImage(View):
+    def get(self, request):
+        form = DocumentForm(request.POST, request.FILES)
+        return render(request, 'Instagram/upload.html', {'form': form})
+
+    def post(self, request):
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('Instagram:feed')
+        return render(request, 'Instagram/upload.html', {'form': form})

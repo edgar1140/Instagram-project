@@ -38,3 +38,4 @@ def soccer_filter(path, side=800):
     finalimage = Image.blend(image, ball, .4)
     finalimage.save(path)
     return True
+2240
